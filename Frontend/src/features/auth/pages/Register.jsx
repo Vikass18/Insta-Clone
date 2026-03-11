@@ -22,6 +22,7 @@ const Register = () => {
             onInput={(e) => {
               setUsername(e.target.value);
             }}
+            required
             type="text"
             name="username"
             placeholder="Enter username"
@@ -30,6 +31,7 @@ const Register = () => {
             onInput={(e) => {
               setEmail(e.target.value);
             }}
+            required
             type="email"
             name="email"
             placeholder="Enter email"
@@ -38,11 +40,12 @@ const Register = () => {
             onInput={(e) => {
               setPassword(e.target.value);
             }}
+            required
             type="password"
             name="password"
             placeholder="Enter password"
           />
-          <button type="submit">Register</button>
+          <button className="button primary-button" type="submit">Register</button>
         </form>
 
         <p>
