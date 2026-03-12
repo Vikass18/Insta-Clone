@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is required"],
+    select: false
   },
   bio: {
     type: String,
@@ -22,18 +23,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "https://ik.imagekit.io/vikas18/defaultUser.webp",
   },
-  followers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-  ],
-  following: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-  ],
 });
 
 const userModel = mongoose.model("users", userSchema);
