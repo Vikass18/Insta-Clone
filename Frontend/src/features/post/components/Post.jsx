@@ -4,7 +4,7 @@ import { usePost } from "../hook/usePost";
 import { useAuth } from "../../auth/auth.context";
 import { followUser, unfollowUser } from "../../auth/services/user.api";
 
-const BACKEND_BASE_URL = "http://localhost:3000";
+const BACKEND_BASE_URL = "https://insta-clone-raa9.onrender.com";
 
 const toPublicUrl = (path) => {
   if (!path) return "/default-avatar.png";
