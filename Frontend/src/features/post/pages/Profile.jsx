@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { useAuth } from "../../auth/auth.context";
 import { usePost } from "../hook/usePost";
 import {
@@ -25,7 +25,8 @@ const toPublicUrl = (path) => {
 const Profile = () => {
   const params = useParams();
   const profileUsername = params.username;
-  const { user, handleUpdateProfile } = useAuth();
+  const navigate = useNavigate();
+  const { user, handleUpdateProfile, handleLogout } = useAuth();
   const { handleDeletePost } = usePost();
   const [profileUser, setProfileUser] = useState(null);
   const [profilePosts, setProfilePosts] = useState([]);
@@ -183,6 +184,11 @@ const Profile = () => {
     }
   };
 
+  const handleLogoutClick = async () => {
+    await handleLogout();
+    navigate("/login");
+  };
+
   if (loading || !user || !profileUser) {
     return (
       <main>
@@ -242,6 +248,15 @@ const Profile = () => {
                   : isFollowing
                     ? "Unfollow"
                     : "Follow"}
+              </button>
+            )}
+
+            {isOwnProfile && (
+              <button
+                className="follow-button logout-button"
+                onClick={handleLogoutClick}
+              >
+                Logout
               </button>
             )}
           </div>

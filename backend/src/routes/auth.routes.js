@@ -8,6 +8,8 @@ authRouter.post("/register", authController.registerController);
 
 authRouter.post("/login", authController.loginController);
 
+authRouter.post("/logout", authController.logoutController);
+
 /**
  * @route GET /api/auth/get-me
  * @desc get the currently logged in user info

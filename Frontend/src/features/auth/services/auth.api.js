@@ -32,6 +32,15 @@ export async function login(username, password) {
   }
 }
 
+export async function logout() {
+  try {
+    const response = await api.post("/logout");
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function getMe() {
   try {
     const response = await api.get("/get-me");
