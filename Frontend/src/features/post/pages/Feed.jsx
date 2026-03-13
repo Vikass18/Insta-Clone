@@ -27,7 +27,7 @@ const Feed = () => {
     );
   }
 
-  console.log(feed);
+//   console.log(feed);
 
   return (
     <main className="feed-page">
