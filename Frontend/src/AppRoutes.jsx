@@ -14,6 +14,7 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:username" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

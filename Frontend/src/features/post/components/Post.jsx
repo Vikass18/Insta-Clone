@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router";
 import { usePost } from "../hook/usePost";
+import { useAuth } from "../../auth/auth.context";
+import { followUser, unfollowUser } from "../../auth/services/user.api";
 
 const BACKEND_BASE_URL = "http://localhost:3000";
 
@@ -10,17 +13,20 @@ const toPublicUrl = (path) => {
   return path;
 };
 
-const Post = ({ user = {}, post = {}, grid = false }) => {
+const Post = ({ user = {}, post = {}, grid = false, onFollowChange }) => {
   const { handleLikePost } = usePost();
+  const { user: currentUser } = useAuth();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likeCount, setLikeCount] = useState(post.likeCount ?? 0);
   const [tapCount, setTapCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(post.isFollowing || false);
   const tapTimeoutRef = useRef(null);
 
   useEffect(() => {
     setIsLiked(post.isLiked || false);
     setLikeCount(post.likeCount ?? 0);
-  }, [post.isLiked, post.likeCount]);
+    setIsFollowing(post.isFollowing || false);
+  }, [post.isLiked, post.likeCount, post.isFollowing]);
 
   const handleToggleLike = async () => {
     try {
@@ -31,6 +37,23 @@ const Post = ({ user = {}, post = {}, grid = false }) => {
       );
     } catch (error) {
       console.error("Error toggling like:", error);
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    try {
+      if (isFollowing) {
+        await unfollowUser(user.username);
+        setIsFollowing(false);
+        onFollowChange?.(false);
+      } else {
+        await followUser(user.username);
+        setIsFollowing(true);
+        onFollowChange?.(true);
+      }
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+      alert("Failed to update follow status");
     }
   };
 
@@ -57,10 +80,17 @@ const Post = ({ user = {}, post = {}, grid = false }) => {
     <div className={["post", grid ? "post-grid" : ""].join(" ")}>
       {!grid && (
         <div className="user">
-          <div className="img-wrapper">
-            <img src={toPublicUrl(user.profileImage)} alt="" />
-          </div>
-          <p>{user.username}</p>
+          <Link to={`/profile/${user.username}`} className="user-link">
+            <div className="img-wrapper">
+              <img src={toPublicUrl(user.profileImage)} alt="" />
+            </div>
+            <p>{user.username}</p>
+          </Link>
+          {currentUser && currentUser.username !== user.username && (
+            <button className="follow-btn" onClick={handleFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
+          )}
         </div>
       )}
 

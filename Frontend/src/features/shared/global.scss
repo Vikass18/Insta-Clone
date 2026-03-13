@@ -1,6 +1,5 @@
 @use "./button.scss";
 
-
 * {
   margin: 0%;
   padding: 0%;
@@ -28,4 +27,19 @@ html {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+}
+
+.follow-btn {
+  background: #0095f6;
+  color: #ffffff;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #007bb5;
+  }
 }

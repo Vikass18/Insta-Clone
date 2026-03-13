@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const BACKEND_BASE_URL = `http://${window.location.hostname}:3000`;
+
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: BACKEND_BASE_URL,
   withCredentials: true,
 });
 

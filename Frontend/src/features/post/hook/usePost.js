@@ -13,9 +13,15 @@ export const usePost = () => {
 
   const handleGetFeed = async () => {
     setLoading(true);
-    const data = await getFeed();
-    setFeed(data.posts);
-    setLoading(false);
+    try {
+      const data = await getFeed();
+      setFeed(data.posts || []);
+    } catch (error) {
+      console.error("Error fetching feed:", error);
+      setFeed([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCreatePost = async (formData) => {

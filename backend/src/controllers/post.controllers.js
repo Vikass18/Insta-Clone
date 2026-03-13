@@ -3,6 +3,7 @@ const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const jwt = require("jsonwebtoken");
 const likeModel = require("../models/like.model");
+const followModel = require("../models/follow.model");
 
 const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -111,15 +112,21 @@ async function getFeedController(req, res) {
 
   const enriched = await Promise.all(
     posts.map(async (post) => {
-      const [isLiked, likeCount] = await Promise.all([
+      const [isLiked, likeCount, isFollowing] = await Promise.all([
         likeModel.findOne({ user: user.username, post: post._id }),
         likeModel.countDocuments({ post: post._id }),
+        // Determine whether the current user is following the post author
+        followModel.findOne({
+          follower: user.username,
+          followee: post.user.username,
+        }),
       ]);
 
       return {
         ...post,
         isLiked: Boolean(isLiked),
         likeCount,
+        isFollowing: Boolean(isFollowing),
       };
     }),
   );
