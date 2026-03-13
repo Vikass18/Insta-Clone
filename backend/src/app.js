@@ -7,8 +7,8 @@ const app = express();
 /* middlewares */
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
-// Allow the frontend dev server (including phone/remote forwarding) to connect.
-// Using `origin: true` allows all origins (use only in development).
+
+
 app.use(
   cors({
     origin: true,
@@ -19,6 +19,10 @@ app.use(
 // Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(express.static("./public"))
+
 /* required routes */
 const authRouter = require("./routes/auth.routes");
 const postRouter = require("./routes/post.routes");
@@ -28,5 +32,9 @@ const userRouter = require("./routes/user.routes");
 app.use("/api/posts", postRouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+
+app.use('*name', (req , res)=>{
+  res.sendFile(path.join(__dirname,"..","/public/index.html"))
+})
 
 module.exports = app;
