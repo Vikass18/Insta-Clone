@@ -67,50 +67,92 @@ async function getPostDetailsController(req, res) {
 }
 
 async function likePostController(req, res) {
-
   const username = req.user.username;
   const postId = req.params.postId;
 
-  const post = await postModel.findById(postId)
+  const post = await postModel.findById(postId);
 
-  if(!post){
+  if (!post) {
     return res.status(404).json({
-      message: "post not found"
-    })
+      message: "post not found",
+    });
   }
 
-  const like = await likeModel.create({
+  const existingLike = await likeModel.findOne({
     post: postId,
-    user: username
-  })
-  res.status(200).json({
-    message: "post liked successfully",
-    like
-  })
+    user: username,
+  });
 
+  if (existingLike) {
+    // Unlike: remove the like
+    await likeModel.findByIdAndDelete(existingLike._id);
+    res.status(200).json({
+      message: "post unliked successfully",
+      liked: false,
+    });
+  } else {
+    // Like: create the like
+    const like = await likeModel.create({
+      post: postId,
+      user: username,
+    });
+    res.status(200).json({
+      message: "post liked successfully",
+      liked: true,
+      like,
+    });
+  }
 }
 
-async function getFeedController(req,res){
+async function getFeedController(req, res) {
+  const user = req.user;
 
-  const user = req.user
-  
-  const posts = await Promise.all((await postModel.find().populate("user").lean())
-      .map(async (post)=>{
+  const posts = await postModel.find().populate("user").lean();
 
-        const isLiked = await likeModel.findOne({
-          user: user.username,
-          post: post._id
-        })
+  const enriched = await Promise.all(
+    posts.map(async (post) => {
+      const [isLiked, likeCount] = await Promise.all([
+        likeModel.findOne({ user: user.username, post: post._id }),
+        likeModel.countDocuments({ post: post._id }),
+      ]);
 
-          post.isLiked = Boolean(isLiked)
-
-          return post
-      }))
+      return {
+        ...post,
+        isLiked: Boolean(isLiked),
+        likeCount,
+      };
+    }),
+  );
 
   res.status(200).json({
-    message:"posts fetched successfully",
-    posts
-  })
+    message: "posts fetched successfully",
+    posts: enriched,
+  });
+}
+
+async function deletePostController(req, res) {
+  const userId = req.user.id;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  if (post.user.toString() !== userId) {
+    return res.status(403).json({
+      message: "You can only delete your own posts",
+    });
+  }
+
+  await postModel.findByIdAndDelete(postId);
+
+  res.status(200).json({
+    message: "Post deleted successfully",
+  });
 }
 
 module.exports = {
@@ -118,5 +160,6 @@ module.exports = {
   getPostController,
   getPostDetailsController,
   likePostController,
-  getFeedController
+  getFeedController,
+  deletePostController,
 };

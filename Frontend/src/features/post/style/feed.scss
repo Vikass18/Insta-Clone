@@ -1,7 +1,9 @@
 .feed-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 1rem;
 
   .feed {
     max-width: 400px;
@@ -11,21 +13,91 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 0.1rem;
+      gap: 1rem;
     }
 
     .post {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      background-color: rgba(11, 8, 8, 0.124);
-      padding-inline: 0.5rem;
-      padding-block: 0.5rem;
+      gap: 0.75rem;
+      background-color: #2d2d2d;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+      &.post-grid {
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 8px;
+
+        .user {
+          display: none;
+        }
+
+        .icons {
+          display: none;
+        }
+
+        .bottom {
+          display: none;
+        }
+
+        .image-wrap {
+          position: relative;
+          overflow: hidden;
+          border-radius: 12px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.2s ease;
+          }
+
+          &:hover .grid-overlay {
+            opacity: 1;
+          }
+
+          .grid-stats {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+
+            .like {
+              color: #e91e63;
+              font-size: 1.1rem;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
 
       .user {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.75rem;
         align-items: center;
 
         .img-wrapper {
@@ -33,13 +105,24 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          border: 2px solid rgba(255, 0, 0, 0);
-          background: conic-gradient(#d62976, #fa7e1e, #d62976);
+          border: 2px solid #ffffff;
+          padding: 2px;
+          transition: border-color 0.2s ease;
+
+          &:hover {
+            border-color: #0095f6;
+          }
         }
         img {
-          width: 2rem;
+          width: 2.5rem;
           aspect-ratio: 1/1;
           border-radius: 50%;
+          object-fit: cover;
+        }
+
+        p {
+          font-weight: 600;
+          color: #e0e0e0;
         }
       }
 
@@ -49,26 +132,55 @@
 
         .left {
           display: flex;
-          gap: 0.75rem;
+          gap: 1rem;
         }
-        .like{
-            stroke: red;
-            fill: red;
+        .like {
+          stroke: #e91e63;
+          fill: #e91e63;
         }
+
+        .like-count {
+          color: #e0e0e0;
+          font-size: 0.9rem;
+          align-self: center;
+        }
+
         svg {
-          width: 1rem;
+          width: 1.25rem;
           aspect-ratio: 1/1;
-          color: white;
+          color: #b0b0b0;
+          transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+        }
+
+        button.liked svg {
+          transform: scale(1.2);
+          color: #e91e63;
         }
         button {
           background-color: transparent;
           border: none;
           outline: none;
+          cursor: pointer;
+          padding: 0.25rem;
+          border-radius: 50%;
+          transition: background-color 0.2s ease;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            svg {
+              color: white;
+              transform: scale(1.1);
+            }
+          }
         }
       }
 
       img {
         width: 100%;
+        border-radius: 8px;
+        object-fit: cover;
       }
     }
   }

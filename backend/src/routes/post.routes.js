@@ -26,19 +26,37 @@ postRouter.get("/", identifyUser, postController.getPostController);
  * GET /api/posts/details/:postid
  * return an detail about specific post with id , also check whether the post belongs to the user that the request come from
  */
-postRouter.get("/details/:postId",identifyUser,postController.getPostDetailsController,);
+postRouter.get(
+  "/details/:postId",
+  identifyUser,
+  postController.getPostDetailsController,
+);
 
 /**
  * @route POST /api/posts/like/:postId [protected]
  * @description Like a post with the id provided in the request params
  */
-postRouter.post("/like/:postId", identifyUser, postController.likePostController);
+postRouter.post(
+  "/like/:postId",
+  identifyUser,
+  postController.likePostController,
+);
 
 /**
  * @route GET /api/posts/feed
  * @description get all the post created in the DB
  * @access private
  */
-postRouter.get("/feed",identifyUser,postController.getFeedController)
+postRouter.get("/feed", identifyUser, postController.getFeedController);
+
+/**
+ * @route DELETE /api/posts/:postId [protected]
+ * @description Delete a post by id (only if it belongs to the user)
+ */
+postRouter.delete(
+  "/:postId",
+  identifyUser,
+  postController.deletePostController,
+);
 
 module.exports = postRouter;

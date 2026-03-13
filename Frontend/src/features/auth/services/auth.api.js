@@ -38,3 +38,28 @@ export async function getMe() {
     throw err;
   }
 }
+
+export async function updateProfile(bio, profileImage) {
+  try {
+    const formData = new FormData();
+
+    // Add bio if provided
+    if (bio !== undefined) {
+      formData.append("bio", bio);
+    }
+
+    // Add profile image if it's a File object
+    if (profileImage && profileImage instanceof File) {
+      formData.append("profileImage", profileImage);
+    }
+
+    const response = await api.put("/update-profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+}
