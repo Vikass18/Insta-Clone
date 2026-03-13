@@ -13,7 +13,7 @@ import Nav from "../../shared/components/Nav";
 import Post from "../components/Post";
 import "../style/profile.scss";
 
-const BACKEND_BASE_URL = "http://localhost:3000";
+const BACKEND_BASE_URL = "https://insta-clone-raa9.onrender.com";
 
 const toPublicUrl = (path) => {
   if (!path) return "/default-avatar.png";
